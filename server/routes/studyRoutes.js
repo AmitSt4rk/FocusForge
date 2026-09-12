@@ -2,6 +2,8 @@ const express = require("express");
 
 const {
     startStudySession,
+    pauseStudySession,
+    resumeStudySession,
     completeStudySession,
     cancelStudySession,
     getStudySessions
@@ -15,6 +17,18 @@ router.post(
     "/start",
     protect,
     startStudySession
+);
+
+router.post(
+    "/pause/:id", 
+    protect, 
+    pauseStudySession
+);
+
+router.post(
+    "/resume/:id", 
+    protect, 
+    resumeStudySession
 );
 
 router.post(

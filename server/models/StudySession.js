@@ -32,8 +32,19 @@ const studySessionSchema = new mongoose.Schema(
 
         status: {
             type: String,
-            enum: ["active", "completed", "cancelled"],
+            enum: ["active", "paused", "completed", "cancelled"],
             default: "active"
+        },
+
+        pausedAt: {
+            type: Date,
+            default: null
+        },
+        
+        totalPausedSeconds: {
+            type: Number,
+            default: 0,
+            min: 0
         },
 
         completed: {

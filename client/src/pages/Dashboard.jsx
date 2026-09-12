@@ -76,14 +76,80 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [studyResponse, creditResponse] = await Promise.all([
-                    api.get("/study"),
-                    api.get("/credits")
-                ]);
+                const [studyResponse, creditResponse] =
+                    await Promise.all([
+                        api.get("/study"),
+                        api.get("/credits")
+                    ]);
 
-                setStudySessions(studyResponse.data.sessions);
+                const sessions = studyResponse.data.sessions;
+
+                setStudySessions(sessions);
                 setCreditBalance(creditResponse.data.balance);
 
+                const activeSession = sessions.find(
+                    (session) =>
+                        session.status === "active" ||
+                        session.status === "paused"
+                );
+
+                if (activeSession) {
+                    const startTime = new Date(
+                        activeSession.startTime
+                    ).getTime();
+
+                    const now = Date.now();
+
+                    const elapsedSeconds = Math.floor(
+                        (now - startTime) / 1000
+                    );
+
+                    const totalPausedSeconds =
+                        activeSession.totalPausedSeconds || 0;
+
+                    let activeElapsedSeconds =
+                        elapsedSeconds - totalPausedSeconds;
+
+                    // If currently paused, also exclude
+                    // the current pause duration.
+                    if (
+                        activeSession.status === "paused" &&
+                        activeSession.pausedAt
+                    ) {
+                        const pausedAt = new Date(
+                            activeSession.pausedAt
+                        ).getTime();
+
+                        const currentPauseSeconds = Math.floor(
+                            (now - pausedAt) / 1000
+                        );
+
+                        activeElapsedSeconds -= currentPauseSeconds;
+                    }
+
+                    const totalSeconds =
+                        activeSession.duration * 60;
+
+                    const remainingSeconds = Math.max(
+                        totalSeconds - activeElapsedSeconds,
+                        0
+                    );
+
+                    setActiveSessionId(activeSession._id);
+                    setSeconds(remainingSeconds);
+
+                    if (activeSession.status === "paused") {
+                        setIsPaused(true);
+                        setIsRunning(false);
+                    } else {
+                        setIsPaused(false);
+                        setIsRunning(true);
+                    }
+                } else {
+                    setActiveSessionId(null);
+                    setIsRunning(false);
+                    setIsPaused(false);
+                }
             } catch (error) {
                 console.error(
                     "Dashboard data error:",
@@ -133,6 +199,7 @@ const Dashboard = () => {
 
             setActiveSessionId(null);
             setIsRunning(false);
+            setIsPaused(false);
             setSeconds(STUDY_DURATION);
 
             // Refresh dashboard data
@@ -153,21 +220,94 @@ const Dashboard = () => {
         }
     };
 
-    const pauseTimer = () => {
-        setIsPaused(true);
-        setIsRunning(false);
+    const cancelStudySession = async () => {
+        if (!activeSessionId) {
+            return;
+        }
+
+        try {
+            const response = await api.post(
+                `/study/cancel/${activeSessionId}`
+            );
+
+            console.log(
+                "Study session cancelled:",
+                response.data
+            );
+
+            setIsRunning(false);
+            setIsPaused(false);
+            setSeconds(STUDY_DURATION);
+            setActiveSessionId(null);
+
+            // Refresh dashboard data
+            const [studyResponse, creditResponse] =
+                await Promise.all([
+                    api.get("/study"),
+                    api.get("/credits")
+                ]);
+
+            setStudySessions(studyResponse.data.sessions);
+            setCreditBalance(creditResponse.data.balance);
+
+        } catch (error) {
+            console.error(
+                "Cancel study session error:",
+                error.response?.data || error.message
+            );
+        }
     };
 
-    const resumeTimer = () => {
-        setIsPaused(false);
-        setIsRunning(true);
+    const pauseTimer = async () => {
+        if (!activeSessionId) {
+            return;
+        }
+
+        try {
+            const response = await api.post(
+                `/study/pause/${activeSessionId}`
+            );
+
+            console.log(
+                "Study session paused:",
+                response.data
+            );
+
+            setIsPaused(true);
+            setIsRunning(false);
+
+        } catch (error) {
+            console.error(
+                "Pause study session error:",
+                error.response?.data || error.message
+            );
+        }
     };
 
-    const resetTimer = () => {
-        setIsRunning(false);
-        setIsPaused(false);
-        setSeconds(STUDY_DURATION);
-        setActiveSessionId(null);
+    const resumeTimer = async () => {
+        if (!activeSessionId) {
+            return;
+        }
+
+        try {
+            const response = await api.post(
+                `/study/resume/${activeSessionId}`
+            );
+
+            console.log(
+                "Study session resumed:",
+                response.data
+            );
+
+            setIsPaused(false);
+            setIsRunning(true);
+
+        } catch (error) {
+            console.error(
+                "Resume study session error:",
+                error.response?.data || error.message
+            );
+        }
     };
 
     const handleLogout = () => {
@@ -377,10 +517,10 @@ const Dashboard = () => {
 
                             <button
                                 className="secondary-button"
-                                onClick={resetTimer}
+                                onClick={cancelStudySession}
                                 disabled={!activeSessionId}
                             >
-                                Reset
+                                Cancel Session
                             </button>
 
                         </div>
@@ -494,9 +634,10 @@ const Dashboard = () => {
 
                                     <button
                                         className="primary-button"
-                                        onClick={() => setIsRunning(true)}
+                                        onClick={startStudySession}
+                                        disabled={startingSession}
                                     >
-                                        Start Studying
+                                        {startingSession ? "Starting..." : "Start Studying"}
                                     </button>
                                 </div>
                             ) : (
@@ -543,7 +684,7 @@ const Dashboard = () => {
                             <span>◈</span>
 
                             <strong>
-                                {user?.focusCredits ?? 0}
+                                {loadingData ? "..." : creditBalance}
                             </strong>
 
                             <small>credits</small>
