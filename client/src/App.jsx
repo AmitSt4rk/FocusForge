@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Study from "./pages/Study";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -17,6 +18,11 @@ function App() {
                     <Route
                         path="/dashboard"
                         element={<Dashboard />}
+                    />
+
+                    <Route 
+                    path="/study" 
+                    element={<Study />} 
                     />
                 </Route>
 

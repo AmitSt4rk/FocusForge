@@ -154,47 +154,61 @@ const resumeStudySession = async (req, res) => {
 };
 
 // Complete a study session
+// Complete a study session
 const completeStudySession = async (req, res) => {
     try {
-        const session = await StudySession.findOne({
+        const creditsEarned = await StudySession.findOne({
             _id: req.params.id,
-            user: req.user._id
+            user: req.user._id,
+            status: { $in: ["active", "paused"] },
+            completed: false
         });
 
-        if (!session) {
-            return res.status(404).json({
-                success: false,
-                message: "Study session not found."
-            });
-        }
-
-        if (
-            session.completed ||
-            !["active", "paused"].includes(session.status)
-        ) {
+        if (!creditsEarned) {
             return res.status(400).json({
                 success: false,
-                message: "Session cannot be completed."
+                message: "Session not found or already completed."
             });
         }
 
-        // Calculate credits
-        const creditsEarned = session.duration;
+        const earnedCredits = creditsEarned.duration;
 
-        // Update study session
-        session.endTime = new Date();
-        session.status = "completed";
-        session.completed = true;
-        session.creditsEarned = creditsEarned;
+        // Atomically mark the session as completed.
+        // Only one request can successfully change an active/paused session.
+        const session = await StudySession.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                user: req.user._id,
+                status: { $in: ["active", "paused"] },
+                completed: false
+            },
+            {
+                $set: {
+                    endTime: new Date(),
+                    status: "completed",
+                    completed: true,
+                    creditsEarned: earnedCredits,
+                    pausedAt: null
+                }
+            },
+            {
+                new: true
+            }
+        );
 
-        await session.save();
+        if (!session) {
+            return res.status(400).json({
+                success: false,
+                message: "Session has already been completed."
+            });
+        }
 
         // Update user's credit balance
         const user = await User.findByIdAndUpdate(
             req.user._id,
             {
                 $inc: {
-                    focusCredits: creditsEarned
+                    focusCredits: earnedCredits
                 }
             },
             {
@@ -206,8 +220,8 @@ const completeStudySession = async (req, res) => {
         const transaction = await CreditTransaction.create({
             user: req.user._id,
             type: "earned",
-            amount: creditsEarned,
-            description: `Earned ${creditsEarned} credit(s) from study session`,
+            amount: earnedCredits,
+            description: `Earned ${earnedCredits} credit(s) from study session`,
             studySession: session._id
         });
 
@@ -216,7 +230,7 @@ const completeStudySession = async (req, res) => {
             message: "Study session completed successfully.",
             session,
             credits: {
-                earned: creditsEarned,
+                earned: earnedCredits,
                 balance: user.focusCredits
             },
             transaction
@@ -362,11 +376,120 @@ const getStudySessions = async (req, res) => {
     }
 };
 
+// Get study analytics
+const getStudyAnalytics = async (req, res) => {
+    try {
+        const sessions = await StudySession.find({
+            user: req.user._id,
+            status: "completed",
+            completed: true
+        }).sort({
+            endTime: -1
+        });
+
+        const totalStudyMinutes = sessions.reduce(
+            (total, session) => {
+                return total + session.duration;
+            },
+            0
+        );
+
+        const completedSessions = sessions.length;
+
+        const totalCreditsEarned = sessions.reduce(
+            (total, session) => {
+                return total + (session.creditsEarned || 0);
+            },
+            0
+        );
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const last7Days = [];
+
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+
+            date.setDate(
+                today.getDate() - i
+            );
+
+            const nextDate = new Date(date);
+
+            nextDate.setDate(
+                date.getDate() + 1
+            );
+
+            const daySessions = sessions.filter(
+                (session) => {
+                    const sessionDate =
+                        new Date(session.endTime);
+
+                    return (
+                        sessionDate >= date &&
+                        sessionDate < nextDate
+                    );
+                }
+            );
+
+            const minutes = daySessions.reduce(
+                (total, session) => {
+                    return total + session.duration;
+                },
+                0
+            );
+
+            last7Days.push({
+                date: date.toISOString().split("T")[0],
+                minutes,
+                sessions: daySessions.length
+            });
+        }
+
+        let mostProductiveDay = null;
+
+        if (last7Days.length > 0) {
+            mostProductiveDay = last7Days.reduce(
+                (best, current) => {
+                    return current.minutes > best.minutes
+                        ? current
+                        : best;
+                },
+                last7Days[0]
+            );
+        }
+
+        res.json({
+            success: true,
+            analytics: {
+                totalStudyMinutes,
+                completedSessions,
+                totalCreditsEarned,
+                last7Days,
+                mostProductiveDay
+            }
+        });
+
+    } catch (error) {
+        console.error(
+            "Get study analytics error:",
+            error.message
+        );
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch study analytics."
+        });
+    }
+};
+
 module.exports = {
     startStudySession,
     pauseStudySession,
     resumeStudySession,
     completeStudySession,
     cancelStudySession,
-    getStudySessions
+    getStudySessions,
+    getStudyAnalytics
 };

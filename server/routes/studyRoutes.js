@@ -6,7 +6,8 @@ const {
     resumeStudySession,
     completeStudySession,
     cancelStudySession,
-    getStudySessions
+    getStudySessions,
+    getStudyAnalytics
 } = require("../controllers/studyController");
 
 const protect = require("../middleware/authMiddleware");
@@ -47,6 +48,12 @@ router.get(
     "/",
     protect,
     getStudySessions
+);
+
+router.get(
+    "/analytics",
+    protect,
+    getStudyAnalytics
 );
 
 module.exports = router;

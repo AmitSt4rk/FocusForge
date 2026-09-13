@@ -110,8 +110,6 @@ const Dashboard = () => {
                     let activeElapsedSeconds =
                         elapsedSeconds - totalPausedSeconds;
 
-                    // If currently paused, also exclude
-                    // the current pause duration.
                     if (
                         activeSession.status === "paused" &&
                         activeSession.pausedAt
@@ -337,7 +335,10 @@ const Dashboard = () => {
                         Dashboard
                     </button>
 
-                    <button className="nav-item">
+                    <button
+                        className="nav-item"
+                        onClick={() => navigate("/study")}
+                    >
                         <span>◷</span>
                         Study
                     </button>
