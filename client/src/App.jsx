@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
+import SkillExchange from "./pages/SkillExchange";
+import StudentProfile from "./pages/StudentProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -15,15 +17,10 @@ function App() {
 
                 {/* Protected routes */}
                 <Route element={<ProtectedRoute />}>
-                    <Route
-                        path="/dashboard"
-                        element={<Dashboard />}
-                    />
-
-                    <Route 
-                    path="/study" 
-                    element={<Study />} 
-                    />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/study" element={<Study />} />
+                    <Route path="/skill-exchange" element={<SkillExchange />} />
+                    <Route path="/student/:id" element={<StudentProfile />} />
                 </Route>
 
                 {/* Default route */}

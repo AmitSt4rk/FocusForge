@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoutes");
 const studyRoutes = require("./routes/studyRoutes");
 const creditRoutes = require("./routes/creditRoutes");
 const goalRoutes = require("./routes/goalRoutes");
+const skillRoutes = require("./routes/skillRoutes");
+const exchangeRequestRoutes = require("./routes/exchangeRequestRoutes");
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/study", studyRoutes);
 app.use("/api/credits", creditRoutes);
 app.use("/api/goals", goalRoutes);
+app.use("/api/skills", skillRoutes);
+app.use("/api/exchange-requests", exchangeRequestRoutes);
 
 // Test route
 app.get("/api/health", (req, res) => {

@@ -1,0 +1,278 @@
+.student-profile-page {
+    padding: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.student-profile-loading {
+    padding: 60px;
+    text-align: center;
+    opacity: 0.6;
+}
+
+.student-profile-error {
+    padding: 60px 32px;
+    text-align: center;
+}
+
+.student-profile-error h2 {
+    margin-bottom: 8px;
+}
+
+.student-profile-error p {
+    opacity: 0.6;
+    margin-bottom: 24px;
+}
+
+.student-profile-error button,
+.profile-back-button {
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.65;
+}
+
+.student-profile-error button:hover,
+.profile-back-button:hover {
+    opacity: 1;
+}
+
+.profile-back-button {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.student-profile-card {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+}
+
+.profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 36px;
+}
+
+.profile-avatar {
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.15);
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    opacity: 0.45;
+}
+
+.profile-identity h1 {
+    margin: 7px 0 4px;
+    font-size: 30px;
+}
+
+.profile-identity p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.5;
+    text-transform: capitalize;
+}
+
+.profile-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.profile-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding: 32px 36px;
+}
+
+.profile-skill-section {
+    display: flex;
+    gap: 16px;
+}
+
+.profile-section-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.12);
+}
+
+.profile-section-icon.learn {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.profile-skill-section h2 {
+    margin: 0 0 5px;
+    font-size: 17px;
+}
+
+.profile-skill-section p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.5;
+}
+
+.profile-skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.profile-skill-tag {
+    padding: 7px 11px;
+    border-radius: 9px;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    font-size: 13px;
+}
+
+.profile-skill-tag.learn {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.profile-empty {
+    font-size: 12px;
+    opacity: 0.4;
+    margin-top: 12px;
+    display: block;
+}
+
+.profile-action-section {
+    margin: 0 36px 36px;
+    padding: 22px;
+    border-radius: 16px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.profile-action-section h2 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.profile-action-section p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.5;
+}
+
+.exchange-request-button {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.exchange-request-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 800px) {
+    .student-profile-page {
+        padding: 20px;
+    }
+
+    .profile-hero {
+        padding: 28px 22px;
+    }
+
+    .profile-skills-grid {
+        grid-template-columns: 1fr;
+        padding: 28px 22px;
+    }
+
+    .profile-action-section {
+        margin: 0 22px 22px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .exchange-request-button {
+        width: 100%;
+    }
+}
+
+/* Exchange Request Form */
+
+.exchange-request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+    max-width: 420px;
+}
+
+.exchange-request-form select,
+.exchange-request-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e2e8f0;
+    font: inherit;
+    outline: none;
+}
+
+.exchange-request-form select:focus,
+.exchange-request-form textarea:focus {
+    border-color: rgba(99, 102, 241, 0.7);
+}
+
+.exchange-request-form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.exchange-request-form select option {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.exchange-request-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.exchange-request-status {
+    margin-top: 12px;
+    color: #a5b4fc;
+    font-size: 14px;
+}

@@ -40,6 +40,16 @@ const userSchema = new mongoose.Schema(
         focusCredits: {
             type: Number,
             default: 0
+        },
+
+        skillsToTeach: {
+            type: [String],
+            default: []
+        },
+
+        skillsToLearn: {
+            type: [String],
+            default: []
         }
     },
     {

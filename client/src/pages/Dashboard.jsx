@@ -348,7 +348,10 @@ const Dashboard = () => {
                         Study
                     </button>
 
-                    <button className="nav-item">
+                    <button
+                        className="nav-item"
+                        onClick={() => navigate("/skill-exchange")}
+                    >
                         <span>⇄</span>
                         Skill Exchange
                     </button>
