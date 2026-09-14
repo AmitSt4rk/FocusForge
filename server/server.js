@@ -9,6 +9,8 @@ const creditRoutes = require("./routes/creditRoutes");
 const goalRoutes = require("./routes/goalRoutes");
 const skillRoutes = require("./routes/skillRoutes");
 const exchangeRequestRoutes = require("./routes/exchangeRequestRoutes");
+const tutorRoutes = require("./routes/tutorRoutes");
+const tutorRequestRoutes = require("./routes/tutorRequestRoutes");
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use("/api/credits", creditRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/exchange-requests", exchangeRequestRoutes);
+app.use("/api/tutors", tutorRoutes);
+app.use("/api/tutor-requests", tutorRequestRoutes);
 
 // Test route
 app.get("/api/health", (req, res) => {

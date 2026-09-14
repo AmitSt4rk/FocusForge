@@ -1,0 +1,448 @@
+.tutor-profile-page {
+    min-height: 100%;
+    padding: 36px;
+    color: #f8fafc;
+}
+
+.back-button {
+    margin-bottom: 22px;
+
+    border: none;
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.back-button:hover {
+    color: #e2e8f0;
+}
+
+
+/* Main Card */
+
+.tutor-profile-card {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, 0.85),
+            rgba(15, 23, 42, 0.95)
+        );
+}
+
+
+/* Header */
+
+.tutor-profile-header {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+
+    padding: 35px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.07);
+}
+
+.large-tutor-avatar {
+    width: 88px;
+    height: 88px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: rgba(99, 102, 241, 0.18);
+
+    color: #a5b4fc;
+
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.large-tutor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-label,
+.profile-section-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #818cf8;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 1.4px;
+}
+
+.tutor-profile-identity h1 {
+    margin: 0 0 8px;
+
+    font-size: 30px;
+}
+
+.profile-availability {
+    color: #4ade80;
+    font-size: 13px;
+}
+
+.profile-availability span {
+    margin-right: 6px;
+}
+
+
+/* Body */
+
+.tutor-profile-body {
+    display: grid;
+
+    grid-template-columns:
+        1fr 280px;
+
+    gap: 35px;
+
+    padding: 35px;
+}
+
+.profile-section {
+    margin-bottom: 35px;
+}
+
+.profile-section h2 {
+    margin: 0 0 14px;
+
+    font-size: 20px;
+}
+
+.tutor-profile-bio {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+
+/* Subjects */
+
+.profile-subjects {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.profile-subjects span {
+    padding: 8px 12px;
+
+    border-radius: 9px;
+
+    background: rgba(99, 102, 241, 0.12);
+
+    color: #a5b4fc;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* Sidebar */
+
+.tutor-profile-sidebar {
+    padding: 20px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+    border-radius: 17px;
+
+    background:
+        rgba(2, 6, 23, 0.45);
+
+    align-self: start;
+}
+
+.profile-stat {
+    padding: 14px 0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.06);
+}
+
+.profile-stat:first-child {
+    padding-top: 0;
+}
+
+.profile-stat:last-of-type {
+    border-bottom: none;
+}
+
+.profile-stat span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+.profile-stat strong {
+    color: #e2e8f0;
+
+    font-size: 14px;
+}
+
+.available-text {
+    color: #4ade80 !important;
+}
+
+
+/* Request button */
+
+.request-session-button {
+    width: 100%;
+
+    margin-top: 18px;
+
+    padding: 13px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.request-session-button:hover {
+    opacity: 0.9;
+}
+
+
+/* Loading / Error */
+
+.tutor-profile-message {
+    max-width: 600px;
+
+    margin: 80px auto;
+
+    padding: 45px 25px;
+
+    text-align: center;
+
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+
+    color: #94a3b8;
+}
+
+.tutor-profile-message h2 {
+    margin-top: 0;
+
+    color: #e2e8f0;
+}
+
+.back-to-tutors-button {
+    margin-top: 18px;
+
+    padding: 11px 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* Responsive */
+
+@media (max-width: 750px) {
+
+    .tutor-profile-page {
+        padding: 22px;
+    }
+
+    .tutor-profile-header {
+        padding: 25px;
+
+        align-items: flex-start;
+    }
+
+    .tutor-profile-body {
+        grid-template-columns: 1fr;
+
+        padding: 25px;
+    }
+
+    .tutor-profile-identity h1 {
+        font-size: 24px;
+    }
+
+}
+
+/* Tutor Request Form */
+
+.tutor-request-form {
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tutor-request-form h3 {
+    margin: 0 0 18px;
+
+    font-size: 16px;
+    color: #e2e8f0;
+}
+
+.tutor-request-form label {
+    display: block;
+
+    margin: 14px 0 7px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.tutor-request-form select,
+.tutor-request-form textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px 11px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #0f172a;
+    color: #e2e8f0;
+
+    font-size: 12px;
+}
+
+.tutor-request-form select:focus,
+.tutor-request-form textarea:focus {
+    border-color:
+        rgba(129, 140, 248, 0.6);
+}
+
+.tutor-request-form textarea {
+    min-height: 80px;
+
+    resize: vertical;
+
+    font-family: inherit;
+}
+
+.request-cost {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 16px;
+    padding: 11px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(99, 102, 241, 0.1);
+}
+
+.request-cost span {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.request-cost strong {
+    color: #a5b4fc;
+    font-size: 14px;
+}
+
+.send-tutor-request-button {
+    width: 100%;
+
+    margin-top: 14px;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.send-tutor-request-button:hover {
+    opacity: 0.9;
+}
+
+.send-tutor-request-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+.tutor-request-status {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    color: #a5b4fc;
+    font-size: 12px;
+    line-height: 1.5;
+}

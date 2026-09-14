@@ -356,6 +356,15 @@ const Dashboard = () => {
                         Skill Exchange
                     </button>
 
+                    <button
+                        className="nav-item"
+                        type="button"
+                        onClick={() => navigate("/tutors")}
+                    >
+                        <span>◉</span>
+                        Tutors
+                    </button>
+
                     <button className="nav-item">
                         <span>▣</span>
                         Bookings
@@ -554,7 +563,10 @@ const Dashboard = () => {
 
                         <div className="quick-actions">
 
-                            <button className="quick-action">
+                            <button
+                                className="quick-action"
+                                onClick={() => navigate("/tutors")}
+                            >
                                 <span>🔎</span>
 
                                 <div>
@@ -567,7 +579,10 @@ const Dashboard = () => {
                                 <b>→</b>
                             </button>
 
-                            <button className="quick-action">
+                            <button
+                                className="quick-action"
+                                onClick={() => navigate("/skill-exchange")}
+                            >
                                 <span>🤝</span>
 
                                 <div>
@@ -580,7 +595,10 @@ const Dashboard = () => {
                                 <b>→</b>
                             </button>
 
-                            <button className="quick-action">
+                            <button
+                                className="quick-action"
+                                onClick={() => navigate("/bookings")}
+                            >
                                 <span>📅</span>
 
                                 <div>
@@ -592,7 +610,6 @@ const Dashboard = () => {
 
                                 <b>→</b>
                             </button>
-
                         </div>
 
                     </div>
