@@ -447,6 +447,42 @@ const getStudyAnalytics = async (req, res) => {
             });
         }
 
+        // Calculate current study streak
+        const studyDates = new Set();
+
+        sessions.forEach((session) => {
+            if (session.endTime) {
+                const date = new Date(session.endTime);
+
+                date.setHours(0, 0, 0, 0);
+
+                studyDates.add(
+                    date.toISOString().split("T")[0]
+                );
+            }
+        });
+
+        let currentStreak = 0;
+
+        const streakDate = new Date();
+        streakDate.setHours(0, 0, 0, 0);
+
+        while (true) {
+            const dateKey = streakDate
+                .toISOString()
+                .split("T")[0];
+
+            if (!studyDates.has(dateKey)) {
+                break;
+            }
+
+            currentStreak++;
+
+            streakDate.setDate(
+                streakDate.getDate() - 1
+            );
+        }
+
         let mostProductiveDay = null;
 
         if (last7Days.length > 0) {
@@ -467,7 +503,8 @@ const getStudyAnalytics = async (req, res) => {
                 completedSessions,
                 totalCreditsEarned,
                 last7Days,
-                mostProductiveDay
+                mostProductiveDay,
+                currentStreak
             }
         });
 

@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const studyRoutes = require("./routes/studyRoutes");
 const creditRoutes = require("./routes/creditRoutes");
+const goalRoutes = require("./routes/goalRoutes");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/study", studyRoutes);
 app.use("/api/credits", creditRoutes);
+app.use("/api/goals", goalRoutes);
 
 // Test route
 app.get("/api/health", (req, res) => {

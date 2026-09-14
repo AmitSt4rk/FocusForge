@@ -7,13 +7,14 @@ const Dashboard = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    const STUDY_DURATION = 25 * 60;
+    const DEFAULT_STUDY_DURATION = 45 * 60;
 
-    const [seconds, setSeconds] = useState(STUDY_DURATION);
+    const [seconds, setSeconds] = useState(DEFAULT_STUDY_DURATION);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
 
     const [activeSessionId, setActiveSessionId] = useState(null);
+    const [activeSessionDuration, setActiveSessionDuration] = useState(45);
     const [startingSession, setStartingSession] = useState(false);
 
     const [studySessions, setStudySessions] = useState([]);
@@ -26,11 +27,14 @@ const Dashboard = () => {
 
             const response = await api.post("/study/start", {
                 subject: "General Study",
-                duration: 25
+                duration: 45
             });
 
-            setActiveSessionId(response.data.session._id);
-            setSeconds(STUDY_DURATION);
+            const session = response.data.session;
+
+            setActiveSessionId(session._id);
+            setActiveSessionDuration(session.duration);
+            setSeconds(session.duration * 60);
             setIsPaused(false);
             setIsRunning(true);
 
@@ -134,6 +138,7 @@ const Dashboard = () => {
                     );
 
                     setActiveSessionId(activeSession._id);
+                    setActiveSessionDuration(activeSession.duration);
                     setSeconds(remainingSeconds);
 
                     if (activeSession.status === "paused") {
@@ -196,11 +201,11 @@ const Dashboard = () => {
             );
 
             setActiveSessionId(null);
+            setActiveSessionDuration(25);
             setIsRunning(false);
             setIsPaused(false);
-            setSeconds(STUDY_DURATION);
+            setSeconds(DEFAULT_STUDY_DURATION);
 
-            // Refresh dashboard data
             const [studyResponse, creditResponse] =
                 await Promise.all([
                     api.get("/study"),
@@ -235,10 +240,10 @@ const Dashboard = () => {
 
             setIsRunning(false);
             setIsPaused(false);
-            setSeconds(STUDY_DURATION);
             setActiveSessionId(null);
+            setActiveSessionDuration(25);
+            setSeconds(DEFAULT_STUDY_DURATION);
 
-            // Refresh dashboard data
             const [studyResponse, creditResponse] =
                 await Promise.all([
                     api.get("/study"),
@@ -483,7 +488,10 @@ const Dashboard = () => {
                         </div>
 
                         <p className="timer-description">
-                            Focus for 25 minutes without distractions.
+                            {activeSessionId
+                                ? `Focus session • ${activeSessionDuration} minutes`
+                                : "Start a focused study session without distractions."
+                            }
                         </p>
 
                         <div className="timer-actions">

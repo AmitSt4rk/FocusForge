@@ -4,13 +4,11 @@ import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import "../styles/study.css";
 
-const STUDY_DURATION = 25 * 60;
-
 const Study = () => {
     const navigate = useNavigate();
     const { user, login, token } = useAuth();
 
-    const [seconds, setSeconds] = useState(STUDY_DURATION);
+    const [seconds, setSeconds] = useState(45 * 60);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [sessionCompleted, setSessionCompleted] = useState(false);
@@ -23,9 +21,36 @@ const Study = () => {
 
     const [subject, setSubject] = useState("General Study");
     const [creditHistory, setCreditHistory] = useState([]);
+    const [selectedDuration, setSelectedDuration] = useState(45);
+    const [customDuration, setCustomDuration] = useState("");
+
+    const isValidDuration = (value) => {
+        const minutes = Number(value);
+
+        return (
+            Number.isInteger(minutes) &&
+            minutes >= 1 &&
+            minutes <= 180
+        );
+    };
+
+    const handleDurationChange = (minutes) => {
+        setSelectedDuration(minutes);
+        setSeconds(minutes * 60);
+        setSessionCompleted(false);
+        setEarnedCredits(0);
+    };
 
     const [analytics, setAnalytics] = useState(null);
     const [analyticsLoading, setAnalyticsLoading] = useState(true);
+    const [productivityInsight, setProductivityInsight] = useState(null);
+
+    const [goals, setGoals] = useState(null);
+    const [goalsLoading, setGoalsLoading] = useState(true);
+    const [editingGoals, setEditingGoals] = useState(false);
+    const [dailyGoalInput, setDailyGoalInput] = useState("");
+    const [weeklyGoalInput, setWeeklyGoalInput] = useState("");
+    const [savingGoals, setSavingGoals] = useState(false);
 
     const formatTime = () => {
         const minutes = Math.floor(seconds / 60);
@@ -99,6 +124,7 @@ const Study = () => {
 
                 setActiveSessionId(activeSession._id);
                 setSubject(activeSession.subject);
+                setSelectedDuration(activeSession.duration);
                 setSeconds(remainingSeconds);
 
                 if (activeSession.status === "paused") {
@@ -149,9 +175,62 @@ const Study = () => {
                     "/study/analytics"
                 );
 
-                setAnalytics(
-                    response.data.analytics
-                );
+                const analyticsData = response.data.analytics;
+
+                setAnalytics(analyticsData);
+
+                let insight;
+
+                if (analyticsData.completedSessions === 0) {
+
+                    insight = {
+                        icon: "🌱",
+                        title: "Start your focus journey",
+                        message:
+                            "Complete your first study session and your productivity insights will appear here."
+                    };
+
+                } else if (analyticsData.completedSessions >= 10) {
+
+                    insight = {
+                        icon: "🔥",
+                        title: "You're on fire!",
+                        message:
+                            `You've completed ${analyticsData.completedSessions} focused sessions. Keep building the habit.`
+                    };
+
+                } else if (
+                    analyticsData.mostProductiveDay &&
+                    analyticsData.mostProductiveDay.minutes >= 45
+                ) {
+
+                    insight = {
+                        icon: "🏆",
+                        title: "You've found your rhythm",
+                        message:
+                            `${analyticsData.mostProductiveDay.minutes} minutes was your strongest study day this week.`
+                    };
+
+                } else if (analyticsData.totalStudyMinutes >= 60) {
+
+                    insight = {
+                        icon: "📈",
+                        title: "Great progress!",
+                        message:
+                            `You've already completed ${analyticsData.totalStudyMinutes} focused minutes. Keep the momentum going.`
+                    };
+
+                } else {
+
+                    insight = {
+                        icon: "✨",
+                        title: "You're getting started",
+                        message:
+                            "Every focused session counts. Keep showing up and your progress will grow."
+                    };
+                }
+
+                setProductivityInsight(insight);
 
             } catch (error) {
                 console.error(
@@ -165,6 +244,60 @@ const Study = () => {
 
         loadAnalytics();
     }, []);
+
+    useEffect(() => {
+        const loadGoals = async () => {
+            try {
+                const response = await api.get("/goals");
+
+                setGoals(response.data.goal);
+
+            } catch (error) {
+                console.error(
+                    "Goals loading error:",
+                    error.response?.data || error.message
+                );
+            } finally {
+                setGoalsLoading(false);
+            }
+        };
+
+        loadGoals();
+    }, []);
+
+    const startEditingGoals = () => {
+        if (!goals) return;
+
+        setDailyGoalInput(goals.dailyGoalMinutes);
+        setWeeklyGoalInput(goals.weeklyGoalMinutes);
+        setEditingGoals(true);
+    };
+
+    const saveGoals = async () => {
+        try {
+            setSavingGoals(true);
+
+            const response = await api.put("/goals", {
+                dailyGoalMinutes: Number(dailyGoalInput),
+                weeklyGoalMinutes: Number(weeklyGoalInput)
+            });
+
+            setGoals((previous) => ({
+                ...previous,
+                ...response.data.goal
+            }));
+
+            setEditingGoals(false);
+
+        } catch (error) {
+            console.error(
+                "Goal update error:",
+                error.response?.data || error.message
+            );
+        } finally {
+            setSavingGoals(false);
+        }
+    };
 
     useEffect(() => {
         if (!isRunning || isPaused) {
@@ -186,22 +319,24 @@ const Study = () => {
         return () => clearInterval(timer);
     }, [isRunning, isPaused]);
 
-    /*
-     * Start session
-     */
+
+    // Start session
     const startStudySession = async () => {
+        if (!isValidDuration(selectedDuration)) {
+            return;
+        }
         try {
             setStartingSession(true);
 
             const response = await api.post("/study/start", {
                 subject,
-                duration: 25
+                duration: selectedDuration
             });
 
             const session = response.data.session;
 
             setActiveSessionId(session._id);
-            setSeconds(STUDY_DURATION);
+            setSeconds(selectedDuration * 60);
             setIsPaused(false);
             setIsRunning(true);
 
@@ -273,7 +408,7 @@ const Study = () => {
             setActiveSessionId(null);
             setIsRunning(false);
             setIsPaused(false);
-            setSeconds(STUDY_DURATION);
+            setSeconds(selectedDuration * 60);
 
         } catch (error) {
             console.error(
@@ -428,7 +563,7 @@ const Study = () => {
                             className="primary-button"
                             onClick={() => {
                                 setSessionCompleted(false);
-                                setSeconds(STUDY_DURATION);
+                                setSeconds(selectedDuration * 60);
                             }}
                         >
                             Continue Focusing
@@ -473,10 +608,11 @@ const Study = () => {
                                 <div
                                     className="timer-progress-bar"
                                     style={{
-                                        width: `${((STUDY_DURATION - seconds) /
-                                            STUDY_DURATION) *
+                                        width: `${(
+                                            ((selectedDuration * 60 - seconds) /
+                                                (selectedDuration * 60)) *
                                             100
-                                            }%`
+                                        )}%`
                                     }}
                                 />
                             </div>
@@ -537,6 +673,140 @@ const Study = () => {
                     </section>
                 )}
 
+                {/* Study Duration */}
+                <section className="study-duration-section">
+
+                    <span className="section-label">
+                        SESSION LENGTH
+                    </span>
+
+                    <div className={`custom-duration ${customDuration !== "" &&
+                        Number(customDuration) >= 1 &&
+                        Number(customDuration) <= 180
+                        ? "active"
+                        : ""
+                        }`}
+                    >
+
+                        <label htmlFor="custom-duration-input">
+                            Custom duration
+                        </label>
+
+                        <div className="custom-duration-input">
+
+                            <input
+                                id="custom-duration-input"
+                                type="number"
+                                min="1"
+                                max="180"
+                                placeholder="Enter minutes"
+                                value={customDuration}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+
+                                    setCustomDuration(value);
+
+                                    if (isValidDuration(value)) {
+                                        handleDurationChange(Number(value));
+                                    }
+                                }}
+                                disabled={isRunning || isPaused}
+                            />
+
+                            <span>minutes</span>
+
+                        </div>
+
+                        <small>
+                            Choose between 1 and 180 minutes.
+                        </small>
+
+                    </div>
+
+                    <div className="analytics-header">
+                        <div>
+                            <h2>
+                                Choose your focus time
+                            </h2>
+
+                            <p>
+                                Set how long you want to study this session.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="duration-options">
+
+                        {[15, 25, 45, 60, 90].map((minutes) => (
+                            <button
+                                key={minutes}
+                                className={`duration-option ${selectedDuration === minutes
+                                    ? "active"
+                                    : ""
+                                    }`}
+                                onClick={() => {
+                                    setCustomDuration("");
+                                    handleDurationChange(minutes);
+                                }}
+                                disabled={isRunning || isPaused}
+                            >
+                                <strong>
+                                    {minutes}
+                                </strong>
+
+                                <span>
+                                    min
+                                </span>
+                            </button>
+                        ))}
+
+                    </div>
+
+                    {/* Quick Subjects */}
+                    <section className="quick-subjects">
+
+                        <div>
+                            <span className="section-label">
+                                QUICK START
+                            </span>
+
+                            <h2>What are you studying?</h2>
+                        </div>
+
+                        <div className="subject-list">
+
+                            {[
+                                "General Study",
+                                "DSA",
+                                "React",
+                                "JavaScript",
+                                "DBMS"
+                            ].map((item) => (
+                                <button
+                                    key={item}
+                                    className={
+                                        subject === item
+                                            ? "subject-button active"
+                                            : "subject-button"
+                                    }
+                                    onClick={() => {
+                                        if (!activeSessionId) {
+                                            setSubject(item);
+                                        }
+                                    }}
+                                    disabled={!!activeSessionId}
+                                >
+                                    {item}
+                                </button>
+                            ))}
+
+                        </div>
+
+                    </section>
+                </section>
+            </main>
+
+            <div className="focuscredit-and-focushistory-info">
                 {/* Session Info */}
                 <aside className="study-info-card">
 
@@ -589,148 +859,100 @@ const Study = () => {
                         </div>
 
                     </div>
-
                 </aside>
 
-            </main>
+                {/* Credit History Section */}
+                <section className="credit-history-section">
 
-            {/* Quick Subjects */}
-            <section className="quick-subjects">
-
-                <div>
-                    <span className="section-label">
-                        QUICK START
-                    </span>
-
-                    <h2>What are you studying?</h2>
-                </div>
-
-                <div className="subject-list">
-
-                    {[
-                        "General Study",
-                        "DSA",
-                        "React",
-                        "JavaScript",
-                        "DBMS"
-                    ].map((item) => (
-                        <button
-                            key={item}
-                            className={
-                                subject === item
-                                    ? "subject-button active"
-                                    : "subject-button"
-                            }
-                            onClick={() => {
-                                if (!activeSessionId) {
-                                    setSubject(item);
-                                }
-                            }}
-                            disabled={!!activeSessionId}
-                        >
-                            {item}
-                        </button>
-                    ))}
-
-                </div>
-
-            </section>
-
-            <section className="credit-history-section">
-
-                <div className="credit-history-header">
-
-                    <div>
-                        <span className="section-label">
-                            FOCUS CREDITS
-                        </span>
-
-                        <h2>Your focus journey</h2>
-
-                        <p>
-                            Every completed session adds to your Focus Credits.
-                        </p>
-                    </div>
-
-                    <div className="credit-history-balance">
-                        <span>◈</span>
+                    <div className="credit-history-header">
 
                         <div>
-                            <strong>{user?.focusCredits ?? 0}</strong>
-                            <small>Current balance</small>
-                        </div>
-                    </div>
+                            <span className="section-label">
+                                FOCUS CREDITS
+                            </span>
 
-                </div>
-
-                <div className="credit-history-list">
-
-                    {creditHistory.length === 0 ? (
-
-                        <div className="credit-empty">
-                            <span>◈</span>
-
-                            <strong>
-                                No credit activity yet
-                            </strong>
+                            <h2>Your focus journey</h2>
 
                             <p>
-                                Complete your first study session to start
-                                earning Focus Credits.
+                                Every completed session adds to your Focus Credits.
                             </p>
                         </div>
 
-                    ) : (
+                        <div className="credit-history-balance">
+                            <span>◈</span>
 
-                        creditHistory.slice(0, 5).map((transaction) => (
+                            <div>
+                                <strong>{user?.focusCredits ?? 0}</strong>
+                                <small>Current balance</small>
+                            </div>
+                        </div>
 
-                            <div
-                                className="credit-history-item"
-                                key={transaction._id}
-                            >
+                    </div>
 
-                                <div className="credit-history-icon">
-                                    {transaction.type === "earned"
-                                        ? "+"
-                                        : "−"}
-                                </div>
+                    <div className="credit-history-list">
 
-                                <div className="credit-history-details">
+                        {creditHistory.length === 0 ? (
 
-                                    <strong>
-                                        {transaction.description ||
-                                            "Credit transaction"}
-                                    </strong>
+                            <div className="credit-empty">
+                                <span>◈</span>
 
-                                    <span>
-                                        {transaction.studySession?.subject ||
-                                            "FocusForge"}
-                                    </span>
+                                <strong>
+                                    No credit activity yet
+                                </strong>
 
-                                </div>
-
-                                <div
-                                    className={
-                                        transaction.type === "earned"
-                                            ? "credit-earned"
-                                            : "credit-spent"
-                                    }
-                                >
-                                    {transaction.type === "earned"
-                                        ? "+"
-                                        : "-"}
-                                    {transaction.amount}
-                                </div>
-
+                                <p>
+                                    Complete your first study session to start
+                                    earning Focus Credits.
+                                </p>
                             </div>
 
-                        ))
+                        ) : (
 
-                    )}
+                            creditHistory.slice(0, 5).map((transaction) => (
 
-                </div>
+                                <div
+                                    className="credit-history-item"
+                                    key={transaction._id}
+                                >
 
-            </section>
+                                    <div className="credit-history-icon">
+                                        {transaction.type === "earned"
+                                            ? "+"
+                                            : "−"}
+                                    </div>
+
+                                    <div className="credit-history-details">
+
+                                        <strong>
+                                            {transaction.description ||
+                                                "Credit transaction"}
+                                        </strong>
+
+                                        <span>
+                                            {transaction.studySession?.subject ||
+                                                "FocusForge"}
+                                        </span>
+
+                                    </div>
+
+                                    <div
+                                        className={
+                                            transaction.type === "earned"
+                                                ? "credit-earned"
+                                                : "credit-spent"
+                                        }
+                                    >
+                                        {transaction.type === "earned"
+                                            ? "+"
+                                            : "-"}
+                                        {transaction.amount}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </section>
+            </div>
 
             {/* Focus Analytics */}
             <section className="focus-analytics-section">
@@ -808,7 +1030,47 @@ const Study = () => {
                                 </div>
                             </div>
 
+                            <div className="analytics-stat-card streak-stat-card">
+                                <span>🔥</span>
+
+                                <div>
+                                    <strong>
+                                        {analytics.currentStreak}
+                                    </strong>
+
+                                    <small>
+                                        Day Streak
+                                    </small>
+                                </div>
+                            </div>
+
                         </div>
+
+                        {productivityInsight && (
+                            <div className="productivity-insight">
+
+                                <div className="insight-icon">
+                                    {productivityInsight.icon}
+                                </div>
+
+                                <div className="insight-content">
+
+                                    <span className="section-label">
+                                        PRODUCTIVITY INSIGHT
+                                    </span>
+
+                                    <h3>
+                                        {productivityInsight.title}
+                                    </h3>
+
+                                    <p>
+                                        {productivityInsight.message}
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        )}
 
 
                         <div className="analytics-bottom-grid">
@@ -949,6 +1211,250 @@ const Study = () => {
                     </div>
 
                 )}
+
+            </section>
+
+            {/* Study Goals */}
+            <section className="study-goals-section">
+
+                <div className="analytics-header">
+
+                    <div>
+                        <span className="section-label">
+                            YOUR TARGETS
+                        </span>
+
+                        <h2>
+                            Study Goals
+                        </h2>
+
+                        <p>
+                            Stay consistent and keep moving toward your targets.
+                        </p>
+                    </div>
+
+                    {!goalsLoading && goals && !editingGoals && (
+                        <button
+                            className="secondary-button"
+                            onClick={startEditingGoals}
+                        >
+                            Edit Goals
+                        </button>
+                    )}
+
+                </div>
+
+                {goalsLoading ? (
+
+                    <div className="analytics-loading">
+                        Loading your goals...
+                    </div>
+
+                ) : goals ? (
+
+                    editingGoals ? (
+
+                        <div className="goal-edit-card">
+
+                            <div className="goal-edit-field">
+
+                                <label>
+                                    Daily Goal
+                                </label>
+
+                                <div className="goal-input-wrapper">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={dailyGoalInput}
+                                        onChange={(e) =>
+                                            setDailyGoalInput(e.target.value)
+                                        }
+                                    />
+
+                                    <span>minutes</span>
+                                </div>
+
+                            </div>
+
+
+                            <div className="goal-edit-field">
+
+                                <label>
+                                    Weekly Goal
+                                </label>
+
+                                <div className="goal-input-wrapper">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={weeklyGoalInput}
+                                        onChange={(e) =>
+                                            setWeeklyGoalInput(e.target.value)
+                                        }
+                                    />
+
+                                    <span>minutes</span>
+                                </div>
+
+                            </div>
+
+
+                            <div className="goal-edit-actions">
+
+                                <button
+                                    className="secondary-button"
+                                    onClick={() => setEditingGoals(false)}
+                                    disabled={savingGoals}
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    className="primary-button"
+                                    onClick={saveGoals}
+                                    disabled={
+                                        savingGoals ||
+                                        Number(dailyGoalInput) < 1 ||
+                                        Number(weeklyGoalInput) < 1
+                                    }
+                                >
+                                    {savingGoals
+                                        ? "Saving..."
+                                        : "Save Goals"}
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    ) : (
+
+                        <div className="goals-grid">
+
+                            <div className="goal-card">
+
+                                <div className="goal-card-top">
+
+                                    <div>
+                                        <span className="goal-label">
+                                            TODAY
+                                        </span>
+
+                                        <h3>
+                                            Daily Focus
+                                        </h3>
+                                    </div>
+
+                                    <span className="goal-icon">
+                                        🎯
+                                    </span>
+
+                                </div>
+
+                                <div className="goal-progress-info">
+
+                                    <strong>
+                                        {goals.dailyProgress}
+                                    </strong>
+
+                                    <span>
+                                        / {goals.dailyGoalMinutes} min
+                                    </span>
+
+                                </div>
+
+                                <div className="goal-progress-track">
+
+                                    <div
+                                        className="goal-progress-fill"
+                                        style={{
+                                            width: `${Math.min(
+                                                (goals.dailyProgress /
+                                                    goals.dailyGoalMinutes) *
+                                                100,
+                                                100
+                                            )}%`
+                                        }}
+                                    ></div>
+
+                                </div>
+
+                                <p>
+                                    {Math.max(
+                                        goals.dailyGoalMinutes -
+                                        goals.dailyProgress,
+                                        0
+                                    )}{" "}
+                                    minutes remaining
+                                </p>
+
+                            </div>
+
+
+                            <div className="goal-card">
+
+                                <div className="goal-card-top">
+
+                                    <div>
+                                        <span className="goal-label">
+                                            THIS WEEK
+                                        </span>
+
+                                        <h3>
+                                            Weekly Focus
+                                        </h3>
+                                    </div>
+
+                                    <span className="goal-icon">
+                                        📅
+                                    </span>
+
+                                </div>
+
+                                <div className="goal-progress-info">
+
+                                    <strong>
+                                        {goals.weeklyProgress}
+                                    </strong>
+
+                                    <span>
+                                        / {goals.weeklyGoalMinutes} min
+                                    </span>
+
+                                </div>
+
+                                <div className="goal-progress-track">
+
+                                    <div
+                                        className="goal-progress-fill"
+                                        style={{
+                                            width: `${Math.min(
+                                                (goals.weeklyProgress /
+                                                    goals.weeklyGoalMinutes) *
+                                                100,
+                                                100
+                                            )}%`
+                                        }}
+                                    ></div>
+
+                                </div>
+
+                                <p>
+                                    {Math.max(
+                                        goals.weeklyGoalMinutes -
+                                        goals.weeklyProgress,
+                                        0
+                                    )}{" "}
+                                    minutes remaining
+                                </p>
+
+                            </div>
+
+                        </div>
+                    )
+
+                ) : null}
 
             </section>
 
