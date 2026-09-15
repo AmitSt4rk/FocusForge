@@ -221,9 +221,69 @@ const googleLogin = async (req, res) => {
     }
 };
 
+// ===============================
+// UPDATE PROFILE
+// ===============================
+
+const updateProfile = async (req, res) => {
+    try {
+        const { name, profileImage } = req.body;
+
+        if (!name || !name.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Name is required"
+            });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                name: name.trim(),
+                profileImage: profileImage || ""
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        ).select(
+            "name email role profileImage focusCredits"
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                profileImage: user.profileImage,
+                focusCredits: user.focusCredits
+            }
+        });
+
+    } catch (error) {
+        console.error("Update profile error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to update profile"
+        });
+    }
+};
+
 
 module.exports = {
     register,
     login,
-    googleLogin
+    googleLogin,
+    updateProfile
 };

@@ -5,9 +5,9 @@ import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
 import SkillExchange from "./pages/SkillExchange";
 import StudentProfile from "./pages/StudentProfile";
-import Tutor from "./pages/Tutor";
 import TutorProfile from "./pages/TutorProfile";
-import TutorRequests from "./pages/TutorRequests";
+import Bookings from "./pages/Bookings";
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -24,9 +24,9 @@ function App() {
                     <Route path="/study" element={<Study />} />
                     <Route path="/skill-exchange" element={<SkillExchange />} />
                     <Route path="/student/:id" element={<StudentProfile />} />
-                    <Route path="/tutors" element={<Tutor />} />
                     <Route path="/tutor/:id" element={<TutorProfile />} />
-                    <Route path="/tutor-requests" element={<TutorRequests />} />
+                    <Route path="/bookings" element={<Bookings />} />
+                    <Route path="/profile" element={<Profile />} />
                 </Route>
 
                 {/* Default route */}

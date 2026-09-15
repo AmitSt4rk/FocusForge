@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import "../styles/tutor.css";
+import "../styles/tutordiscovery.css";
 
-const Tutor = () => {
+const TutorDiscovery = () => {
     const navigate = useNavigate();
+
     const [subject, setSubject] = useState("");
     const [tutors, setTutors] = useState([]);
 
     const [loading, setLoading] = useState(true);
     const [searching, setSearching] = useState(false);
     const [message, setMessage] = useState("");
-    const [pendingRequests, setPendingRequests] = useState(0);
 
     const fetchTutors = async (searchSubject = "") => {
         try {
@@ -50,9 +50,7 @@ const Tutor = () => {
             );
 
             setTutors([]);
-            setMessage(
-                "Failed to load tutors."
-            );
+            setMessage("Failed to load tutors.");
 
         } finally {
             setLoading(false);
@@ -62,33 +60,10 @@ const Tutor = () => {
 
     useEffect(() => {
         fetchTutors();
-
-        const fetchPendingRequests = async () => {
-            try {
-                const response = await api.get("/tutor-requests");
-
-                const outgoing = response.data.outgoing || [];
-
-                const pendingCount = outgoing.filter(
-                    (request) => request.status === "pending"
-                ).length;
-
-                setPendingRequests(pendingCount);
-
-            } catch (error) {
-                console.error(
-                    "Fetch pending tutor requests error:",
-                    error.response?.data || error.message
-                );
-            }
-        };
-
-        fetchPendingRequests();
     }, []);
 
     const handleSearch = (e) => {
         e.preventDefault();
-
         fetchTutors(subject);
     };
 
@@ -98,45 +73,7 @@ const Tutor = () => {
     };
 
     return (
-        <div className="tutor-page">
-
-            <div className="tutor-header">
-
-                <div>
-                    <span className="tutor-eyebrow">
-                        TUTOR SYSTEM
-                    </span>
-
-                    <h1>
-                        Find the right tutor
-                    </h1>
-
-                    <p>
-                        Learn from students who are
-                        experienced in the skills you want
-                        to master.
-                    </p>
-                </div>
-
-                <button
-                    type="button"
-                    className="my-tutor-requests-button"
-                    onClick={() =>
-                        navigate("/tutor-requests")
-                    }
-                >
-                    My Tutor Requests
-
-                    {pendingRequests > 0 && (
-                        <span className="pending-request-badge">
-                            {pendingRequests}
-                        </span>
-                    )}
-
-                    →
-                </button>
-            </div>
-
+        <div className="tutor-discovery">
 
             {/* Search */}
 
@@ -367,4 +304,4 @@ const Tutor = () => {
     );
 };
 
-export default Tutor;
+export default TutorDiscovery;

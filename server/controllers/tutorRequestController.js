@@ -68,8 +68,19 @@ const sendTutorRequest = async (req, res) => {
             });
         }
 
+        const tutorUser = await User.findById(
+            tutorProfile.user
+        ).select("skillsToTeach");
+
+        if (!tutorUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Tutor user not found"
+            });
+        }
+
         const teachesSubject =
-            tutorProfile.subjects.some(
+            tutorUser.skillsToTeach.some(
                 (item) =>
                     item.toLowerCase() ===
                     subject.trim().toLowerCase()

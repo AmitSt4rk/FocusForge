@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
+import "../styles/dashboard.css";
 
 const Dashboard = () => {
     const { user, logout } = useAuth();
@@ -19,6 +20,7 @@ const Dashboard = () => {
 
     const [studySessions, setStudySessions] = useState([]);
     const [creditBalance, setCreditBalance] = useState(0);
+    const [upcomingBookings, setUpcomingBookings] = useState(0);
     const [loadingData, setLoadingData] = useState(true);
 
     const startStudySession = async () => {
@@ -80,16 +82,27 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [studyResponse, creditResponse] =
+                const [studyResponse, creditResponse, bookingsResponse] =
                     await Promise.all([
                         api.get("/study"),
-                        api.get("/credits")
+                        api.get("/credits"),
+                        api.get("/bookings")
                     ]);
 
                 const sessions = studyResponse.data.sessions;
 
                 setStudySessions(sessions);
                 setCreditBalance(creditResponse.data.balance);
+
+                const upcomingCount = (
+                    bookingsResponse.data.bookings || []
+                ).filter(
+                    (booking) =>
+                        booking.status === "confirmed" &&
+                        new Date(booking.scheduledAt) > new Date()
+                ).length;
+
+                setUpcomingBookings(upcomingCount);
 
                 const activeSession = sessions.find(
                     (session) =>
@@ -359,18 +372,16 @@ const Dashboard = () => {
                     <button
                         className="nav-item"
                         type="button"
-                        onClick={() => navigate("/tutors")}
+                        onClick={() => navigate("/bookings")}
                     >
-                        <span>◉</span>
-                        Tutors
-                    </button>
-
-                    <button className="nav-item">
                         <span>▣</span>
                         Bookings
                     </button>
 
-                    <button className="nav-item">
+                    <button
+                        className="nav-item"
+                        onClick={() => navigate("/profile")}
+                    >
                         <span>◎</span>
                         Profile
                     </button>
@@ -469,7 +480,9 @@ const Dashboard = () => {
 
                         <div>
                             <span>Upcoming Bookings</span>
-                            <strong>0</strong>
+                            <strong>
+                                {loadingData ? "..." : upcomingBookings}
+                            </strong>
                         </div>
                     </div>
 
@@ -565,7 +578,7 @@ const Dashboard = () => {
 
                             <button
                                 className="quick-action"
-                                onClick={() => navigate("/tutors")}
+                                onClick={() => navigate("/skill-exchange")}
                             >
                                 <span>🔎</span>
 
@@ -611,119 +624,6 @@ const Dashboard = () => {
                                 <b>→</b>
                             </button>
                         </div>
-
-                    </div>
-
-                </section>
-
-                {/* Bottom Section */}
-                <section className="bottom-grid">
-
-                    <div className="recent-card">
-
-                        <div className="section-heading">
-                            <div>
-                                <span className="section-label">
-                                    ACTIVITY
-                                </span>
-
-                                <h2>Recent Study Sessions</h2>
-                            </div>
-
-                            <button className="view-button">
-                                View all
-                            </button>
-                        </div>
-
-                        <div className="recent-sessions">
-                            {loadingData ? (
-                                <div className="empty-state">
-                                    <div className="empty-icon">
-                                        ◷
-                                    </div>
-
-                                    <h3>Loading sessions...</h3>
-
-                                    <p>
-                                        Fetching your study activity.
-                                    </p>
-                                </div>
-                            ) : studySessions.length === 0 ? (
-                                <div className="empty-state">
-                                    <div className="empty-icon">
-                                        ◷
-                                    </div>
-
-                                    <h3>No study sessions yet</h3>
-
-                                    <p>
-                                        Start your first focus session to
-                                        begin earning Focus Credits.
-                                    </p>
-
-                                    <button
-                                        className="primary-button"
-                                        onClick={startStudySession}
-                                        disabled={startingSession}
-                                    >
-                                        {startingSession ? "Starting..." : "Start Studying"}
-                                    </button>
-                                </div>
-                            ) : (
-                                studySessions.slice(0, 5).map((session) => (
-                                    <div className="session-item" key={session._id}>
-                                        <div>
-                                            <h4>{session.subject}</h4>
-                                            <p>{session.duration} min</p>
-                                        </div>
-
-                                        <div>
-                                            <span
-                                                className={`session-status ${session.status}`}
-                                            >
-                                                {session.status}
-                                            </span>
-
-                                            {session.completed && (
-                                                <span className="session-credits">
-                                                    +{session.creditsEarned} credit
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-
-                    </div>
-
-                    <div className="credits-card">
-
-                        <div className="section-heading">
-                            <div>
-                                <span className="section-label">
-                                    FOCUS CREDITS
-                                </span>
-
-                                <h2>Your Balance</h2>
-                            </div>
-                        </div>
-
-                        <div className="credit-balance">
-                            <span>◈</span>
-
-                            <strong>
-                                {loadingData ? "..." : creditBalance}
-                            </strong>
-
-                            <small>credits</small>
-                        </div>
-
-                        <p>
-                            Complete productive study sessions
-                            to earn credits that you can spend
-                            on peer guidance.
-                        </p>
 
                     </div>
 

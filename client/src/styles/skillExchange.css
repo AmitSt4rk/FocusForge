@@ -1,578 +1,905 @@
+/* =========================================================
+   FOCUSFORGE — SKILL EXCHANGE
+   Peer Learning Workspace
+========================================================= */
+
 .skill-exchange-page {
-    padding: 32px;
+    min-height: 100vh;
+    padding: 32px 38px 60px;
+
+    background:
+        radial-gradient(circle at 80% 0%,
+            rgba(79, 70, 229, 0.10),
+            transparent 30%),
+        radial-gradient(circle at 15% 25%,
+            rgba(59, 130, 246, 0.05),
+            transparent 25%),
+        #020617;
+
+    color: #f8fafc;
 }
 
-.skill-page-loading {
-    padding: 40px;
-    text-align: center;
-    opacity: 0.6;
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.skill-exchange-header {
+    max-width: 1280px;
+    margin: 0 auto;
+
+    position: relative;
 }
 
-.skill-page-header {
-    margin-bottom: 32px;
+
+/* =========================================================
+   HEADER MAIN
+========================================================= */
+
+.skill-header-main {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding: 34px 36px;
+
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-bottom: none;
+
+    border-radius: 24px 24px 0 0;
+
+    background:
+        linear-gradient(135deg,
+            rgba(15, 23, 42, 0.97),
+            rgba(15, 23, 42, 0.82));
+}
+
+.skill-header-main::before {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    top: -180px;
+    right: 50px;
+
+    border-radius: 50%;
+
+    background: rgba(99, 102, 241, 0.14);
+
+    filter: blur(75px);
+
+    pointer-events: none;
+}
+
+.skill-header-main::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 240px;
+    height: 1px;
+
+    background:
+        linear-gradient(90deg,
+            rgba(129, 140, 248, 0.8),
+            transparent);
+}
+
+
+/* =========================================================
+   HEADER COPY
+========================================================= */
+
+.skill-header-copy {
+    max-width: 720px;
+
+    position: relative;
+    z-index: 1;
 }
 
 .skill-eyebrow {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    opacity: 0.55;
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: 2.4px;
+
+    color: #818cf8;
 }
 
-.skill-page-header h1 {
-    margin: 8px 0;
-    font-size: 32px;
-}
-
-.skill-page-header p {
+.skill-header-copy h1 {
     margin: 0;
-    opacity: 0.6;
+
+    font-size: clamp(34px, 4vw, 48px);
+
+    line-height: 1.06;
+
+    letter-spacing: -1.8px;
+
+    font-weight: 750;
 }
 
-.skills-editor-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-}
-
-.skill-editor-card {
-    padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.skill-card-heading {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.skill-card-heading h2 {
-    margin: 0 0 4px;
-    font-size: 19px;
-}
-
-.skill-card-heading p {
-    margin: 0;
-    font-size: 13px;
-    opacity: 0.5;
-}
-
-.skill-icon {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    background: rgba(99, 102, 241, 0.12);
-}
-
-.skill-input-row {
-    display: flex;
-    gap: 10px;
-}
-
-.skill-input-row input {
-    flex: 1;
-    min-width: 0;
-    padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    outline: none;
-    background: rgba(255, 255, 255, 0.04);
-    color: inherit;
-}
-
-.skill-input-row input:focus {
-    border-color: rgba(99, 102, 241, 0.7);
-}
-
-.skill-input-row button,
-.save-skills-button {
-    border: none;
-    border-radius: 10px;
-    padding: 0 18px;
-    cursor: pointer;
-    background: #4f46e5;
-    color: white;
-    font-weight: 600;
-}
-
-.skill-input-row button:hover,
-.save-skills-button:hover {
-    opacity: 0.9;
-}
-
-.skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 20px;
-    min-height: 32px;
-}
-
-.skill-tag {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    font-size: 13px;
-}
-
-.skill-tag button {
-    border: none;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    opacity: 0.6;
-    font-size: 16px;
-    line-height: 1;
-}
-
-.skill-tag button:hover {
-    opacity: 1;
-}
-
-.empty-skills {
-    font-size: 13px;
-    opacity: 0.4;
-}
-
-.skill-save-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-top: 24px;
-}
-
-.skill-save-message {
-    font-size: 13px;
-    opacity: 0.7;
-}
-
-.save-skills-button {
-    height: 44px;
-    padding: 0 24px;
-}
-
-.save-skills-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-
-@media (max-width: 800px) {
-    .skills-editor-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .skill-exchange-page {
-        padding: 20px;
-    }
-}
-
-/* ================================
-   Discover Students
-================================ */
-
-.discover-section {
-    margin-top: 48px;
-    padding-top: 36px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.discover-header {
-    margin-bottom: 22px;
-}
-
-.discover-header h2 {
-    margin: 8px 0;
-    font-size: 24px;
-}
-
-.discover-header p {
-    margin: 0;
-    font-size: 14px;
-    opacity: 0.55;
-}
-
-.discover-search {
-    display: flex;
-    gap: 10px;
-    max-width: 700px;
-}
-
-.discover-search input {
-    flex: 1;
-    min-width: 0;
-    padding: 14px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    outline: none;
-    background: rgba(255, 255, 255, 0.04);
-    color: inherit;
-    font-size: 14px;
-}
-
-.discover-search input:focus {
-    border-color: rgba(99, 102, 241, 0.7);
-}
-
-.discover-search button {
-    border: none;
-    border-radius: 12px;
-    padding: 0 24px;
-    background: #4f46e5;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.discover-search button:hover {
-    opacity: 0.9;
-}
-
-.discover-search button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.discover-message {
-    margin-top: 18px;
-    font-size: 13px;
-    opacity: 0.6;
-}
-
-.student-results {
-    margin-top: 28px;
-}
-
-.results-count {
-    margin-bottom: 14px;
-    font-size: 13px;
-    opacity: 0.55;
-}
-
-.student-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
-.student-card {
-    padding: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.student-card-top {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.student-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(99, 102, 241, 0.15);
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.student-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.student-card-top h3 {
-    margin: 0 0 4px;
-    font-size: 17px;
-}
-
-.student-role {
-    font-size: 12px;
-    opacity: 0.45;
-}
-
-.student-skills {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 22px;
-}
-
-.skills-label {
+.skill-header-copy h1 span {
     display: block;
-    margin-bottom: 8px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.45;
+
+    color: #818cf8;
 }
 
-.mini-skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-}
+.skill-header-copy p {
+    max-width: 650px;
 
-.mini-skill-tag {
-    padding: 6px 9px;
-    border-radius: 8px;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.18);
-    font-size: 12px;
-}
+    margin: 17px 0 0;
 
-.mini-skill-tag.learn {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
-}
+    font-size: 14px;
 
-.view-profile-button {
-    width: 100%;
-    margin-top: 22px;
-    padding: 11px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    font-weight: 600;
-}
+    line-height: 1.7;
 
-.view-profile-button:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-@media (max-width: 800px) {
-    .student-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .discover-search {
-        flex-direction: column;
-    }
-
-    .discover-search button {
-        height: 44px;
-    }
-}
-
-/* ================================
-   Exchange Requests
-================================ */
-
-.requests-section {
-    margin-top: 32px;
-    padding: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    background: rgba(15, 23, 42, 0.75);
-}
-
-.requests-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 24px;
-}
-
-.requests-header h2 {
-    margin: 6px 0;
-    font-size: 24px;
-}
-
-.requests-header p {
-    margin: 0;
     color: #94a3b8;
 }
 
-.request-count {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 10px;
-    border-radius: 999px;
+
+/* =========================================================
+   CREDIT CARD
+========================================================= */
+
+.skill-credit-card {
+    min-width: 215px;
+
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(99, 102, 241, 0.15);
-    color: #a5b4fc;
-    font-weight: 700;
+
+    gap: 13px;
+
+    padding: 13px 15px;
+
+    position: relative;
+    z-index: 2;
+
+    border: 1px solid rgba(129, 140, 248, 0.14);
+
+    border-radius: 15px;
+
+    background: rgba(99, 102, 241, 0.06);
+
+    backdrop-filter: blur(12px);
 }
 
-.requests-message {
-    color: #94a3b8;
-    padding: 20px 0;
-}
+.credit-card-icon {
+    width: 40px;
+    height: 40px;
 
-.request-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.request-card {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr auto;
-    align-items: center;
-    gap: 24px;
-    padding: 20px;
-    border-radius: 16px;
-    background: rgba(30, 41, 59, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.request-user {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.request-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
     flex-shrink: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #312e81;
-    color: white;
+
+    border-radius: 11px;
+
+    background: rgba(99, 102, 241, 0.14);
+
+    color: #a5b4fc;
+
+    font-size: 18px;
+}
+
+.skill-credit-card span {
+    display: block;
+
+    font-size: 9px;
     font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    color: #64748b;
 }
 
-.request-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.skill-credit-card strong {
+    display: block;
 
-.request-user h3 {
-    margin: 0 0 4px;
-    font-size: 16px;
-}
+    margin-top: 4px;
 
-.request-user span {
-    color: #94a3b8;
-    font-size: 13px;
-}
+    font-size: 12px;
 
-.request-details {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
+    font-weight: 600;
 
-.request-details strong {
-    font-size: 13px;
     color: #cbd5e1;
 }
 
-.request-skill {
-    padding: 6px 11px;
-    border-radius: 999px;
-    background: rgba(99, 102, 241, 0.14);
-    color: #a5b4fc;
+
+/* =========================================================
+   INTERNAL NAVIGATION
+========================================================= */
+
+.exchange-navigation {
+    position: relative;
+    z-index: 10;
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+
+    border-radius: 0 0 20px 20px;
+
+    background:
+        rgba(15, 23, 42, 0.96);
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.exchange-tabs {
+    min-height: 66px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 8px 12px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+.exchange-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.exchange-tab {
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0 17px;
+
+    position: relative;
+
+    border: 1px solid transparent;
+
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: #64748b;
+
     font-size: 13px;
+
     font-weight: 600;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.request-details p {
-    width: 100%;
-    margin: 5px 0 0;
-    color: #94a3b8;
-    font-size: 13px;
+.exchange-tab:hover {
+    color: #cbd5e1;
+
+    background: rgba(51, 65, 85, 0.35);
 }
 
-.request-status {
-    display: inline-flex;
-    padding: 7px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: capitalize;
+.exchange-tab.active {
+    color: #f8fafc;
+
+    background: rgba(99, 102, 241, 0.10);
+
+    border-color: rgba(129, 140, 248, 0.12);
 }
 
-.request-status.pending {
-    background: rgba(245, 158, 11, 0.12);
-    color: #fbbf24;
+.exchange-tab-icon {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    background: rgba(51, 65, 85, 0.35);
+
+    transition: 0.2s ease;
 }
 
-.request-status.accepted {
-    background: rgba(34, 197, 94, 0.12);
-    color: #4ade80;
+.exchange-tab.active .exchange-tab-icon {
+    background: rgba(99, 102, 241, 0.16);
+
+    color: #a5b4fc;
 }
 
-.request-status.rejected {
-    background: rgba(239, 68, 68, 0.12);
-    color: #f87171;
+.tab-indicator {
+    position: absolute;
+
+    left: 17px;
+    right: 17px;
+    bottom: 0;
+
+    height: 2px;
+
+    border-radius: 4px 4px 0 0;
+
+    background: #818cf8;
+
+    box-shadow:
+        0 0 12px rgba(129, 140, 248, 0.55);
 }
 
 
-/* Responsive */
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
 
-@media (max-width: 850px) {
+.skill-exchange-content {
+    max-width: 1280px;
 
-    .request-card {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    margin: 28px auto 0;
+}
+
+
+/* =========================================================
+   CONTENT SECTION
+========================================================= */
+
+.exchange-content-section {
+    animation: exchangeContentIn 0.28s ease;
+}
+
+@keyframes exchangeContentIn {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
     }
 
-    .request-status-area {
-        display: flex;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   CONTENT HEADING
+========================================================= */
+
+.content-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 22px;
+}
+
+.content-heading h2 {
+    max-width: 720px;
+
+    margin: 4px 0 8px;
+
+    font-size: 27px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.7px;
+
+    color: #f1f5f9;
+}
+
+.content-heading p {
+    max-width: 680px;
+
+    margin: 0;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   CONTENT META
+========================================================= */
+
+.content-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 12px;
+
+    border: 1px solid rgba(148, 163, 184, 0.08);
+
+    border-radius: 10px;
+
+    background: rgba(15, 23, 42, 0.65);
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.meta-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 10px rgba(34, 197, 94, 0.55);
+}
+
+.meta-dot.match {
+    background: #818cf8;
+
+    box-shadow:
+        0 0 10px rgba(129, 140, 248, 0.55);
+}
+
+.meta-icon {
+    color: #818cf8;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MAIN COMPONENT PANEL
+========================================================= */
+
+.exchange-panel {
+    padding: 24px;
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(15, 23, 42, 0.78));
+
+    box-shadow:
+        0 18px 55px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   MY SKILLS PLACEHOLDER
+========================================================= */
+
+.skills-placeholder,
+.matches-placeholder {
+    min-height: 390px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 50px 30px;
+
+    text-align: center;
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+
+    border-radius: 22px;
+
+    background:
+        radial-gradient(circle at 50% 0%,
+            rgba(99, 102, 241, 0.08),
+            transparent 40%),
+        rgba(15, 23, 42, 0.72);
+}
+
+.placeholder-icon {
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(129, 140, 248, 0.15);
+
+    border-radius: 16px;
+
+    background: rgba(99, 102, 241, 0.10);
+
+    color: #a5b4fc;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 12px 30px rgba(79, 70, 229, 0.10);
+}
+
+.placeholder-icon.match-icon {
+    color: #818cf8;
+}
+
+.skills-placeholder h3,
+.matches-placeholder h3 {
+    margin: 0;
+
+    font-size: 20px;
+
+    color: #e2e8f0;
+}
+
+.skills-placeholder>p,
+.matches-placeholder>p {
+    max-width: 540px;
+
+    margin: 10px auto 25px;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   SKILL PLACEHOLDER CARDS
+========================================================= */
+
+.skill-placeholder-grid {
+    width: min(100%, 700px);
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 14px;
+
+    margin-top: 5px;
+}
+
+.placeholder-card {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 17px;
+
+    text-align: left;
+
+    border: 1px solid rgba(148, 163, 184, 0.08);
+
+    border-radius: 14px;
+
+    background: rgba(2, 6, 23, 0.38);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.placeholder-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(129, 140, 248, 0.18);
+
+    background: rgba(30, 41, 59, 0.55);
+}
+
+.placeholder-card-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(99, 102, 241, 0.10);
+
+    color: #818cf8;
+}
+
+.placeholder-card strong {
+    display: block;
+
+    font-size: 12px;
+
+    color: #cbd5e1;
+}
+
+.placeholder-card small {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   MATCH ACTION
+========================================================= */
+
+.placeholder-action {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px 15px;
+
+    border: 1px solid rgba(129, 140, 248, 0.15);
+
+    border-radius: 10px;
+
+    background: rgba(99, 102, 241, 0.10);
+
+    color: #a5b4fc;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.placeholder-action:hover {
+    transform: translateY(-1px);
+
+    background: rgba(99, 102, 241, 0.16);
+
+    border-color: rgba(129, 140, 248, 0.28);
+}
+
+.placeholder-action span {
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   COMMON FORM / INTERACTION POLISH
+========================================================= */
+
+.skill-exchange-page button,
+.skill-exchange-page input,
+.skill-exchange-page select {
+    font-family: inherit;
+}
+
+.skill-exchange-page button:focus-visible,
+.skill-exchange-page input:focus-visible,
+.skill-exchange-page select:focus-visible {
+    outline: 2px solid rgba(129, 140, 248, 0.65);
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.skill-page-loading {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #020617;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .skill-exchange-page {
+        padding: 26px 24px 50px;
+    }
+
+    .skill-header-main {
+        padding: 30px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 24px;
+    }
+
+    .skill-credit-card {
+        width: 100%;
+    }
+
+    .content-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .content-meta {
+        width: fit-content;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .skill-exchange-page {
+        padding: 16px 14px 40px;
+    }
+
+    .skill-header-main {
+        padding: 25px 21px;
+
+        border-radius: 19px 19px 0 0;
+    }
+
+    .skill-header-copy h1 {
+        font-size: 32px;
+
+        letter-spacing: -1.1px;
+    }
+
+    .skill-header-copy p {
+        font-size: 13px;
+    }
+
+    .skill-credit-card {
+        min-width: 0;
+    }
+
+    .exchange-navigation {
+        border-radius: 0 0 17px 17px;
+    }
+
+    .exchange-tabs {
+        padding: 7px;
+
+        gap: 2px;
+    }
+
+    .exchange-tab {
+        min-height: 45px;
+
+        padding: 0 12px;
+
+        font-size: 11px;
+    }
+
+    .exchange-tab-icon {
+        width: 24px;
+        height: 24px;
+
+        font-size: 13px;
+    }
+
+    .tab-indicator {
+        left: 12px;
+        right: 12px;
+    }
+
+    .skill-exchange-content {
+        margin-top: 22px;
+    }
+
+    .content-heading h2 {
+        font-size: 23px;
+    }
+
+    .content-heading p {
+        font-size: 12px;
+    }
+
+    .exchange-panel {
+        padding: 14px;
+
+        border-radius: 17px;
+    }
+
+    .skills-placeholder,
+    .matches-placeholder {
+        min-height: 350px;
+
+        padding: 35px 20px;
+
+        border-radius: 18px;
+    }
+
+    .skill-placeholder-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .skill-header-copy h1 {
+        font-size: 28px;
+    }
+
+    .exchange-tab {
+        padding: 0 10px;
+
+        gap: 6px;
+    }
+
+    .exchange-tab-icon {
+        display: none;
+    }
+
+    .exchange-tabs {
         justify-content: flex-start;
     }
 
-}
-
-/* Request Actions */
-
-.request-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.accept-request-button,
-.reject-request-button {
-    border: none;
-    padding: 8px 14px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.accept-request-button {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-}
-
-.reject-request-button {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-}
-
-.accept-request-button:hover,
-.reject-request-button:hover {
-    transform: translateY(-1px);
-    opacity: 0.85;
+    .content-heading h2 {
+        font-size: 21px;
+    }
 }

@@ -127,7 +127,7 @@ const TutorProfile = () => {
 
                     <button
                         className="back-to-tutors-button"
-                        onClick={() => navigate("/tutors")}
+                        onClick={() => navigate("/skill-exchange")}
                     >
                         ← Back to Tutors
                     </button>
@@ -141,7 +141,7 @@ const TutorProfile = () => {
 
             <button
                 className="back-button"
-                onClick={() => navigate("/tutors")}
+                onClick={() => navigate("/skill-exchange")}
             >
                 ← Back to Tutors
             </button>

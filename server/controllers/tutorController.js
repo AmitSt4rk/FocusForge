@@ -116,7 +116,6 @@ const discoverTutors = async (req, res) => {
     try {
         const { subject } = req.query;
 
-
         const filter = {
             user: {
                 $ne: req.user._id
@@ -124,27 +123,37 @@ const discoverTutors = async (req, res) => {
             isAvailable: true
         };
 
-
-        // Optional subject filter
-        if (subject && subject.trim()) {
-            filter.subjects = {
-                $regex: new RegExp(
-                    `^${subject.trim()}$`,
-                    "i"
-                )
-            };
-        }
-
-
-        const tutors = await TutorProfile.find(filter)
+        // Find tutors by their Profile "skillsToTeach"
+        let tutors = await TutorProfile.find(filter)
             .populate(
                 "user",
-                "name profileImage role"
+                "name profileImage role skillsToTeach"
             )
             .sort({
                 createdAt: -1
             });
 
+        // Optional subject/skill filter
+        if (subject && subject.trim()) {
+            const searchSkill = subject.trim().toLowerCase();
+
+            tutors = tutors.filter((tutor) =>
+                tutor.user?.skillsToTeach?.some(
+                    (skill) =>
+                        skill.toLowerCase() === searchSkill
+                )
+            );
+        }
+
+        // Keep "subjects" for frontend compatibility
+        tutors = tutors.map((tutor) => {
+            const tutorObject = tutor.toObject();
+
+            return {
+                ...tutorObject,
+                subjects: tutor.user?.skillsToTeach || []
+            };
+        });
 
         res.json({
             success: true,
@@ -173,7 +182,7 @@ const getTutorProfile = async (req, res) => {
             isAvailable: true
         }).populate(
             "user",
-            "name profileImage role"
+            "name profileImage role skillsToTeach"
         );
 
         if (!tutorProfile) {
@@ -183,16 +192,18 @@ const getTutorProfile = async (req, res) => {
             });
         }
 
+        const tutorObject = tutorProfile.toObject();
+
+        // Use Profile → I Can Teach as the source of truth
+        tutorObject.subjects =
+            tutorProfile.user?.skillsToTeach || [];
+
         res.json({
             success: true,
-            tutorProfile
+            tutorProfile: tutorObject
         });
-
     } catch (error) {
-        console.error(
-            "Get tutor profile error:",
-            error
-        );
+        console.error("Get tutor profile error:", error);
 
         res.status(500).json({
             success: false,

@@ -1,0 +1,603 @@
+/* =========================================================
+   FOCUSFORGE — TUTOR DISCOVERY
+========================================================= */
+
+.tutor-discovery {
+    width: 100%;
+    color: #f8fafc;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.tutor-search-section {
+    margin-bottom: 30px;
+}
+
+.tutor-search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px;
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 16px;
+
+    background: rgba(2, 6, 23, 0.55);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.tutor-search-form input {
+    flex: 1;
+    min-width: 0;
+
+    height: 46px;
+
+    padding: 0 15px;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.035);
+    color: #f8fafc;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.tutor-search-form input::placeholder {
+    color: #64748b;
+}
+
+.tutor-search-form input:focus {
+    border-color: rgba(99, 102, 241, 0.55);
+    background: rgba(99, 102, 241, 0.045);
+}
+
+.tutor-search-form button {
+    height: 46px;
+
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    background: #4f46e5;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 650;
+    font-family: inherit;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.tutor-search-form button:hover:not(:disabled) {
+    background: #6366f1;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 22px rgba(79, 70, 229, 0.22);
+}
+
+.tutor-search-form button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.tutor-search-form .clear-search-button {
+    background: transparent;
+    color: #94a3b8;
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.tutor-search-form .clear-search-button:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #e2e8f0;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   RESULTS HEADER
+========================================================= */
+
+.tutor-results-section {
+    width: 100%;
+}
+
+.tutor-results-section .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.tutor-results-section .section-heading h2 {
+    margin: 0 0 5px;
+
+    font-size: 20px;
+    font-weight: 650;
+
+    letter-spacing: -0.3px;
+}
+
+.tutor-results-section .section-heading p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   TUTOR GRID
+========================================================= */
+
+.tutor-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   TUTOR CARD
+========================================================= */
+
+.tutor-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    padding: 22px;
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, 0.72),
+            rgba(15, 23, 42, 0.86)
+        );
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.16);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.tutor-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    top: -90px;
+    right: -60px;
+
+    border-radius: 50%;
+
+    background: rgba(99, 102, 241, 0.10);
+
+    filter: blur(40px);
+
+    pointer-events: none;
+}
+
+.tutor-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(99, 102, 241, 0.30);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.26),
+        0 0 0 1px rgba(99, 102, 241, 0.04);
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.tutor-card-top {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 18px;
+}
+
+.tutor-avatar {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(129, 140, 248, 0.20);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(79, 70, 229, 0.28),
+            rgba(30, 41, 59, 0.8)
+        );
+
+    color: #c7d2fe;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.tutor-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.tutor-basic-info {
+    min-width: 0;
+}
+
+.tutor-basic-info h3 {
+    margin: 0 0 6px;
+
+    overflow: hidden;
+
+    color: #f8fafc;
+
+    font-size: 16px;
+    font-weight: 650;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.availability-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    color: #94a3b8;
+}
+
+.availability-badge::first-letter {
+    color: #22c55e;
+}
+
+
+/* =========================================================
+   BIO
+========================================================= */
+
+.tutor-bio {
+    min-height: 43px;
+
+    margin: 0 0 20px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.65;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   INFO ROW
+========================================================= */
+
+.tutor-info-row {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.tutor-info-row > div {
+    padding: 12px;
+
+    border: 1px solid rgba(148, 163, 184, 0.07);
+    border-radius: 12px;
+
+    background: rgba(2, 6, 23, 0.30);
+}
+
+.tutor-info-row span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.tutor-info-row strong {
+    display: block;
+
+    color: #cbd5e1;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SUBJECT TAGS
+========================================================= */
+
+.tutor-subjects {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    min-height: 28px;
+
+    margin-bottom: 20px;
+}
+
+.tutor-subjects span {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 6px 9px;
+
+    border: 1px solid rgba(99, 102, 241, 0.16);
+    border-radius: 999px;
+
+    background: rgba(99, 102, 241, 0.08);
+
+    color: #a5b4fc;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   VIEW TUTOR BUTTON
+========================================================= */
+
+.view-tutor-button {
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: auto;
+
+    border: 1px solid rgba(99, 102, 241, 0.22);
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    background: rgba(79, 70, 229, 0.10);
+
+    color: #a5b4fc;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    font-family: inherit;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.view-tutor-button:hover {
+    background: #4f46e5;
+
+    border-color: #6366f1;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY / LOADING STATES
+========================================================= */
+
+.tutor-message,
+.tutor-empty-state {
+    padding: 55px 25px;
+
+    text-align: center;
+
+    border: 1px dashed rgba(148, 163, 184, 0.12);
+    border-radius: 18px;
+
+    background: rgba(2, 6, 23, 0.28);
+}
+
+.tutor-message {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.tutor-empty-state .empty-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 16px;
+
+    border-radius: 17px;
+
+    background: rgba(99, 102, 241, 0.09);
+
+    font-size: 25px;
+}
+
+.tutor-empty-state h3 {
+    margin: 0 0 7px;
+
+    font-size: 17px;
+    font-weight: 650;
+
+    color: #cbd5e1;
+}
+
+.tutor-empty-state p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SEARCH MESSAGE
+========================================================= */
+
+.tutor-search-message {
+    margin: 18px 0 0;
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FOCUS / ACCESSIBILITY
+========================================================= */
+
+.tutor-discovery button:focus-visible,
+.tutor-discovery input:focus-visible {
+    outline: 2px solid rgba(129, 140, 248, 0.65);
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .tutor-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .tutor-search-form {
+        flex-wrap: wrap;
+    }
+
+    .tutor-search-form input {
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .tutor-search-form button {
+        flex: 1;
+    }
+
+    .tutor-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .tutor-card {
+        padding: 18px;
+    }
+
+    .tutor-info-row {
+        grid-template-columns: 1fr;
+    }
+
+    .tutor-search-form {
+        padding: 8px;
+    }
+
+    .tutor-search-form button {
+        padding: 0 12px;
+        font-size: 12px;
+    }
+}

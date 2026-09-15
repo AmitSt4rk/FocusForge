@@ -11,6 +11,7 @@ const skillRoutes = require("./routes/skillRoutes");
 const exchangeRequestRoutes = require("./routes/exchangeRequestRoutes");
 const tutorRoutes = require("./routes/tutorRoutes");
 const tutorRequestRoutes = require("./routes/tutorRequestRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/exchange-requests", exchangeRequestRoutes);
 app.use("/api/tutors", tutorRoutes);
 app.use("/api/tutor-requests", tutorRequestRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // Test route
 app.get("/api/health", (req, res) => {
